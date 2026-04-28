@@ -1,7 +1,16 @@
 {
   "type": "module",
-  "name": "freee-mcp",
-  "version": "0.25.4",
+  "name": "freee-mcp-core",
+  "version": "0.1.0",
+  "main": "./dist/lib.js",
+  "types": "./dist/lib.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/lib.js",
+      "types": "./dist/lib.d.ts"
+    },
+    "./skills": "./skills/"
+  },
   "bin": {
     "freee-mcp": "./bin/freee-mcp.js",
     "freee-remote-mcp": "./bin/freee-remote-mcp.js",
@@ -32,9 +41,14 @@
     "version": "changeset version",
     "release": "bun run build && changeset publish"
   },
-  "author": "freee_jp",
+  "author": "freee K.K. (modified by chisakiShinichirouToshiyuki)",
   "license": "Apache-2.0",
-  "description": "Model Context Protocol (MCP) server for freee API integration",
+  "description": "Library-form fork of freee/freee-mcp. Exposes the MCP server framework, API client, OpenAPI schema loader, and skill resources as npm library exports for use as a dependency, while preserving upstream CLI binary compatibility.",
+  "forkedFrom": {
+    "name": "freee-mcp",
+    "url": "https://github.com/freee/freee-mcp.git",
+    "license": "Apache-2.0"
+  },
   "devDependencies": {
     "@biomejs/biome": "^2.4.7",
     "@changesets/cli": "^2.29.8",
@@ -84,12 +98,16 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/freee/freee-mcp.git"
+    "url": "https://github.com/chisakiShinichirouToshiyuki/freee-mcp-core.git"
   },
   "files": [
     "dist/",
     "bin/",
-    "README.md"
+    "skills/",
+    "openapi/",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
   ],
   "packageManager": "bun@1.3.10"
 }

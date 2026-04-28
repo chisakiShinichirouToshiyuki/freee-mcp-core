@@ -1,0 +1,58 @@
+freee-mcp-core
+==============
+
+This product is a derivative work of freee-mcp, the freee K.K. official
+Model Context Protocol server for the freee API:
+
+    https://github.com/freee/freee-mcp
+
+Copyright 2024-present freee K.K.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may
+not use this file except in compliance with the License. You may obtain
+a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Modifications
+-------------
+
+The following modifications have been applied to the upstream codebase
+in this derivative work:
+
+  - package.json: added "main", "types", and "exports" fields so the
+    package is consumable as a library, in addition to its existing
+    CLI binaries. Renamed the package to "freee-mcp-core" to avoid
+    npm namespace conflict with the upstream "freee-mcp" package.
+  - src/lib.ts: new file. Re-exports the public library API (createMcpServer,
+    addAuthenticationTools, addFileUploadTool, registerSkillResources,
+    makeApiRequest, loadConfig, etc.) for downstream consumers.
+  - src/skills-path.ts: new file. Resolves the bundled skills/ directory
+    via import.meta.url so consumers can locate it at runtime.
+  - src/mcp/skill-resources.ts: new file. Registers bundled skill content
+    as MCP resources (URI scheme skill://) so any MCP client can read
+    skill markdown via the standard resources/list and resources/read
+    methods.
+  - src/cli/skills.ts: new file. Implements install/update/uninstall
+    helpers for skill content, plus reusable *From(srcDir, opts) variants
+    for downstream consumers that bundle additional skills.
+  - src/index.ts: extended the CLI dispatcher with install-skills,
+    update-skills, and uninstall-skills subcommands.
+  - src/mcp/handlers.ts: createMcpServer now auto-registers bundled skill
+    resources by default (opt-out via { skipBundledSkills: true }).
+  - build.ts: added emission of dist/lib.js (library bundle, non-minified,
+    deps external) and dist/*.d.ts (TypeScript declarations) alongside
+    the existing CLI bin output.
+  - package.json files array: added skills/, openapi/, and NOTICE so they
+    ship in the npm tarball.
+
+Modifications copyright 2026 chisakiShinichirouToshiyuki
+(https://github.com/chisakiShinichirouToshiyuki).
+
+Trademarks
+----------
+
+freee, freee会計, and related marks are trademarks of freee K.K. Their
+appearance in source files, documentation, and OpenAPI schemas in this
+repository is for descriptive and interoperability purposes only and
+does not imply endorsement of this derivative work by freee K.K.
