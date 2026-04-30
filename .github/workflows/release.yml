@@ -27,7 +27,13 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
-          persist-credentials: false
+          # Use RELEASE_PAT so commits/pushes by changesets/action are
+          # attributed to a real user rather than github-actions[bot].
+          # Bot-attributed pushes don't trigger downstream workflows by
+          # GitHub design — using a PAT lets the merged Release PR fire
+          # release.yml again and run the publish step automatically.
+          token: ${{ secrets.RELEASE_PAT }}
+          persist-credentials: true
       - name: Setup Bun
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
       - name: Setup Node.js
@@ -55,7 +61,7 @@ jobs:
           setupGitUser: true
           commitMode: git-cli
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_PAT }}
           # Trusted Publishing (OIDC). No NPM_TOKEN required — npm verifies
           # the GitHub Actions OIDC token against the trusted publisher
           # configured at https://www.npmjs.com/package/freee-mcp-core/access
@@ -67,4 +73,4 @@ jobs:
         if: steps.changesets.outputs.pullRequestNumber != ''
         run: gh pr edit ${{ steps.changesets.outputs.pullRequestNumber }} --add-label release
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.RELEASE_PAT }}
