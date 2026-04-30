@@ -20,6 +20,12 @@ export {
 } from './openapi/schema-loader.js';
 export { makeApiRequest } from './api/client.js';
 export {
+  createTextResponse,
+  formatErrorMessage,
+  parseJsonResponse,
+  type JsonParseResult,
+} from './utils/error.js';
+export {
   extractTokenContext,
   resolveCompanyId,
   type AuthExtra,

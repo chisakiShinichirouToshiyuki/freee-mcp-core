@@ -39,6 +39,10 @@ vi.mock('../openapi/client-mode.js', () => ({
   generateClientModeTool: vi.fn(),
 }));
 
+vi.mock('./skill-resources.js', () => ({
+  registerSkillResources: vi.fn(),
+}));
+
 describe('handlers', () => {
   beforeEach(() => {
     vi.clearAllMocks();
