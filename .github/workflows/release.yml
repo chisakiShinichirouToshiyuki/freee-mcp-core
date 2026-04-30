@@ -3,6 +3,12 @@ name: Release
 on:
   push:
     branches: [main]
+  # Manual fallback: GITHUB_TOKEN-attributed commits (e.g. merges of the
+  # Release PR auto-created by changesets/action) do NOT trigger workflows
+  # by GitHub design (avoids infinite loops). When that happens the
+  # publish step never runs from `push`. This dispatch lets us re-fire
+  # the workflow against main on demand.
+  workflow_dispatch:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
