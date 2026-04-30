@@ -17,7 +17,11 @@ vi.mock('fs/promises');
 vi.mock('./config.js', () => ({
   SIGN_TOKEN_ENDPOINT: 'https://ninja-sign.com/oauth/token',
   SIGN_OAUTH_SCOPE: 'all',
-  getSignCredentials: (): Promise<{ clientId: string; clientSecret: string; callbackPort: number }> =>
+  getSignCredentials: (): Promise<{
+    clientId: string;
+    clientSecret: string;
+    callbackPort: number;
+  }> =>
     Promise.resolve({
       clientId: 'sign-client-id',
       clientSecret: 'sign-client-secret',

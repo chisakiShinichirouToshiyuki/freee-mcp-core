@@ -1,9 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import {
-  CONFIG_FILE_PERMISSION,
-  getConfigDir,
-} from '../constants.js';
+import { CONFIG_FILE_PERMISSION, getConfigDir } from '../constants.js';
 import {
   TokenDataSchema,
   OAuthTokenResponseSchema,

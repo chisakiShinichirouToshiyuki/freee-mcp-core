@@ -33,34 +33,36 @@ const UTF8_BOM = String.fromCharCode(0xfeff);
  * into error responses or downstream logs.
  */
 export function coercibleRecord(description: string) {
-  return z.preprocess(
-    (val, ctx) => {
-      if (typeof val !== 'string') return val;
-      if (val.startsWith(UTF8_BOM)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message:
-            `string starts with a UTF-8 BOM (U+FEFF), which is not valid JSON. ` +
-            `The MCP client likely transcoded the payload through a transport ` +
-            `that prepended a BOM (commonly seen on Windows). ` +
-            `Send the JSON without a BOM.`,
-        });
-        return z.NEVER;
-      }
-      try {
-        return JSON.parse(val);
-      } catch {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message:
-            `expected object or JSON-encoded object string; received string ` +
-            `of length ${val.length} that could not be parsed as JSON`,
-        });
-        return z.NEVER;
-      }
-    },
-    z.record(z.string(), z.unknown()),
-  ).describe(description);
+  return z
+    .preprocess(
+      (val, ctx) => {
+        if (typeof val !== 'string') return val;
+        if (val.startsWith(UTF8_BOM)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message:
+              `string starts with a UTF-8 BOM (U+FEFF), which is not valid JSON. ` +
+              `The MCP client likely transcoded the payload through a transport ` +
+              `that prepended a BOM (commonly seen on Windows). ` +
+              `Send the JSON without a BOM.`,
+          });
+          return z.NEVER;
+        }
+        try {
+          return JSON.parse(val);
+        } catch {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message:
+              `expected object or JSON-encoded object string; received string ` +
+              `of length ${val.length} that could not be parsed as JSON`,
+          });
+          return z.NEVER;
+        }
+      },
+      z.record(z.string(), z.unknown()),
+    )
+    .describe(description);
 }
 
 /**
@@ -85,7 +87,11 @@ function createMethodTool(method: string) {
 
     try {
       const { service, path, query, body } = args;
-      setToolAttributes({ 'mcp.tool.service': service, 'mcp.tool.path': safePath, 'mcp.tool.method': method });
+      setToolAttributes({
+        'mcp.tool.service': service,
+        'mcp.tool.path': safePath,
+        'mcp.tool.method': method,
+      });
 
       const validation = validatePathForService(method, path, service);
       if (!validation.isValid) {
@@ -98,7 +104,10 @@ function createMethodTool(method: string) {
         recorder?.recordError({
           source: 'validation',
           error_type: 'path_validation_failed',
-          chain: makeErrorChain('ValidationError', validation.message ?? 'unknown validation error'),
+          chain: makeErrorChain(
+            'ValidationError',
+            validation.message ?? 'unknown validation error',
+          ),
         });
         return createTextResponse(
           `パス検証エラー: ${validation.message}\n\n` +
@@ -107,7 +116,14 @@ function createMethodTool(method: string) {
       }
 
       const actualPath = validation.actualPath ?? path;
-      const result = await makeApiRequest(method, actualPath, query, body, validation.baseUrl, tokenContext);
+      const result = await makeApiRequest(
+        method,
+        actualPath,
+        query,
+        body,
+        validation.baseUrl,
+        tokenContext,
+      );
 
       recorder?.recordToolCall({
         tool: toolName,
@@ -177,7 +193,8 @@ function createMethodTool(method: string) {
  */
 export function generateClientModeTool(server: McpServer): void {
   // GET tool
-  registerTracedTool(server,
+  registerTracedTool(
+    server,
     'freee_api_get',
     {
       title: 'freee API GET リクエスト',
@@ -193,7 +210,8 @@ export function generateClientModeTool(server: McpServer): void {
   );
 
   // POST tool
-  registerTracedTool(server,
+  registerTracedTool(
+    server,
     'freee_api_post',
     {
       title: 'freee API POST リクエスト',
@@ -210,7 +228,8 @@ export function generateClientModeTool(server: McpServer): void {
   );
 
   // PUT tool
-  registerTracedTool(server,
+  registerTracedTool(
+    server,
     'freee_api_put',
     {
       title: 'freee API PUT リクエスト',
@@ -227,7 +246,8 @@ export function generateClientModeTool(server: McpServer): void {
   );
 
   // DELETE tool
-  registerTracedTool(server,
+  registerTracedTool(
+    server,
     'freee_api_delete',
     {
       title: 'freee API DELETE リクエスト',
@@ -243,7 +263,8 @@ export function generateClientModeTool(server: McpServer): void {
   );
 
   // PATCH tool
-  registerTracedTool(server,
+  registerTracedTool(
+    server,
     'freee_api_patch',
     {
       title: 'freee API PATCH リクエスト',
@@ -260,7 +281,8 @@ export function generateClientModeTool(server: McpServer): void {
   );
 
   // Add helper tool to list available paths
-  registerTracedTool(server,
+  registerTracedTool(
+    server,
     'freee_api_list_paths',
     {
       title: 'API エンドポイント一覧',

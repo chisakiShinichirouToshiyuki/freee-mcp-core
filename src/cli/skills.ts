@@ -34,17 +34,12 @@ function resolveTargetDir(scope: 'global' | 'local'): string {
 
 function listSkillNames(srcDir: string): string[] {
   if (!existsSync(srcDir)) return [];
-  return readdirSync(srcDir).filter((name) =>
-    statSync(join(srcDir, name)).isDirectory(),
-  );
+  return readdirSync(srcDir).filter((name) => statSync(join(srcDir, name)).isDirectory());
 }
 
 // Install skills from an arbitrary source directory. Reusable by downstream
 // consumers (wrappers) that bundle their own skills/ alongside core's.
-export function installSkillsFrom(
-  srcDir: string,
-  opts: SkillCommandOptions,
-): SkillCommandResult {
+export function installSkillsFrom(srcDir: string, opts: SkillCommandOptions): SkillCommandResult {
   const targetDir = resolveTargetDir(opts.scope);
   const skillNames = listSkillNames(srcDir);
 
@@ -76,10 +71,7 @@ export function installSkillsFrom(
   return { targetDir, affected };
 }
 
-export function updateSkillsFrom(
-  srcDir: string,
-  opts: SkillCommandOptions,
-): SkillCommandResult {
+export function updateSkillsFrom(srcDir: string, opts: SkillCommandOptions): SkillCommandResult {
   const targetDir = resolveTargetDir(opts.scope);
   const skillNames = listSkillNames(srcDir);
 
@@ -103,10 +95,7 @@ export function updateSkillsFrom(
   return { targetDir, affected };
 }
 
-export function uninstallSkillsFrom(
-  srcDir: string,
-  opts: SkillCommandOptions,
-): SkillCommandResult {
+export function uninstallSkillsFrom(srcDir: string, opts: SkillCommandOptions): SkillCommandResult {
   const targetDir = resolveTargetDir(opts.scope);
   const skillNames = listSkillNames(srcDir);
 

@@ -33,7 +33,9 @@ const EMAIL_PATTERN = /[\w.+-]+@[\w-]+\.[\w.-]+/g;
  */
 export function scrubErrorMessage(input: string): string {
   if (typeof input !== 'string' || input.length === 0) return input;
-  return input.replace(EMAIL_PATTERN, '[REDACTED_EMAIL]').replace(NUMERIC_ID_PATTERN, '[REDACTED_ID]');
+  return input
+    .replace(EMAIL_PATTERN, '[REDACTED_EMAIL]')
+    .replace(NUMERIC_ID_PATTERN, '[REDACTED_ID]');
 }
 
 /**

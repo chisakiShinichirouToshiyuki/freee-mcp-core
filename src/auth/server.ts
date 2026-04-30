@@ -332,7 +332,10 @@ export async function startCallbackServer(port?: number): Promise<void> {
   return defaultCallbackServer.start(port);
 }
 
-export async function startCallbackServerWithAutoStop(timeoutMs: number, port?: number): Promise<void> {
+export async function startCallbackServerWithAutoStop(
+  timeoutMs: number,
+  port?: number,
+): Promise<void> {
   await defaultCallbackServer.start(port);
   defaultCallbackServer.scheduleAutoStop(timeoutMs);
 }

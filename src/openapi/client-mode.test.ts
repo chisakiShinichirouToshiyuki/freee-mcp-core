@@ -24,7 +24,11 @@ vi.mock('../telemetry/tool-tracer.js', () => ({
 }));
 
 vi.mock('./schema-loader.js', () => ({
-  validatePathForService: vi.fn(() => ({ isValid: true, actualPath: undefined, baseUrl: undefined })),
+  validatePathForService: vi.fn(() => ({
+    isValid: true,
+    actualPath: undefined,
+    baseUrl: undefined,
+  })),
   listAllAvailablePaths: vi.fn(() => ''),
 }));
 

@@ -68,7 +68,10 @@ function walkAndRegister(
       (server as any).resource(
         name,
         uri,
-        { mimeType: extensions.find((ext) => full.endsWith(ext)) === '.md' ? 'text/markdown' : 'text/plain' },
+        {
+          mimeType:
+            extensions.find((ext) => full.endsWith(ext)) === '.md' ? 'text/markdown' : 'text/plain',
+        },
         async () => ({
           contents: [
             {

@@ -1,14 +1,27 @@
 import prompts from 'prompts';
 import {
-  addFreeeMcpConfig,
+  addMcpServerConfig,
   checkMcpConfigStatus,
+  FREEE_MCP_SERVER_CONFIG,
+  FREEE_MCP_SERVER_NAME,
   getTargetDisplayName,
+  type McpServerEntry,
   type McpTarget,
-  removeFreeeMcpConfig,
+  removeMcpServerConfig,
 } from '../config/mcp-config.js';
 import { DEFAULT_CALLBACK_PORT } from '../constants.js';
 import { fetchCompanies } from './api-client.js';
 import type { Company, Credentials, SelectedCompany } from './types.js';
+
+export type McpServerProfile = {
+  name: string;
+  entry: McpServerEntry;
+};
+
+export const FREEE_MCP_PROFILE: McpServerProfile = {
+  name: FREEE_MCP_SERVER_NAME,
+  entry: FREEE_MCP_SERVER_CONFIG,
+};
 
 export async function collectCredentials(): Promise<Credentials> {
   const existingConfig = await import('../config/companies.js').then((m) => m.loadFullConfig());
@@ -128,15 +141,15 @@ export async function selectCompany(
   };
 }
 
-async function configureMcpTarget(target: McpTarget): Promise<boolean> {
+async function configureMcpTarget(target: McpTarget, profile: McpServerProfile): Promise<boolean> {
   const displayName = getTargetDisplayName(target);
-  const status = await checkMcpConfigStatus(target);
+  const status = await checkMcpConfigStatus(target, profile.name);
 
   if (status.hasFreeeConfig) {
     const { action } = await prompts({
       type: 'select',
       name: 'action',
-      message: `${displayName} に freee-mcp が設定済みです。どうしますか?`,
+      message: `${displayName} に ${profile.name} が設定済みです。どうしますか?`,
       choices: [
         { title: 'そのまま (変更なし)', value: 'keep' },
         { title: '削除する', value: 'remove' },
@@ -145,8 +158,8 @@ async function configureMcpTarget(target: McpTarget): Promise<boolean> {
     });
 
     if (action === 'remove') {
-      await removeFreeeMcpConfig(target);
-      console.log(`  ✓ ${displayName} から freee-mcp を削除しました。`);
+      await removeMcpServerConfig(target, profile.name);
+      console.log(`  ✓ ${displayName} から ${profile.name} を削除しました。`);
       return false;
     } else {
       console.log(`  - ${displayName} の設定は変更しません。`);
@@ -156,13 +169,13 @@ async function configureMcpTarget(target: McpTarget): Promise<boolean> {
     const { shouldAdd } = await prompts({
       type: 'confirm',
       name: 'shouldAdd',
-      message: `${displayName} に freee-mcp を追加しますか?`,
+      message: `${displayName} に ${profile.name} を追加しますか?`,
       initial: true,
     });
 
     if (shouldAdd) {
-      await addFreeeMcpConfig(target);
-      console.log(`  ✓ ${displayName} に freee-mcp を追加しました。`);
+      await addMcpServerConfig(target, profile.name, profile.entry);
+      console.log(`  ✓ ${displayName} に ${profile.name} を追加しました。`);
       console.log(`    設定ファイル: ${status.path}`);
       return true;
     } else {
@@ -177,8 +190,18 @@ const SKILL_RELEASES_URL = 'https://github.com/freee/freee-mcp/releases/latest';
 function showSkillInstallGuide(
   claudeCodeConfigured: boolean,
   claudeDesktopConfigured: boolean,
+  profile: McpServerProfile,
 ): void {
   if (!claudeCodeConfigured && !claudeDesktopConfigured) {
+    return;
+  }
+
+  // Skill install guide is freee-mcp specific. When the host package is
+  // registered instead, defer to the host's own install instructions.
+  if (profile.name !== FREEE_MCP_SERVER_NAME) {
+    console.log(
+      `Skill (API リファレンス) のインストールは ${profile.name} 側のドキュメントを参照してください。\n`,
+    );
     return;
   }
 
@@ -202,17 +225,19 @@ function showSkillInstallGuide(
   }
 }
 
-export async function configureMcpIntegration(): Promise<void> {
+export async function configureMcpIntegration(
+  profile: McpServerProfile = FREEE_MCP_PROFILE,
+): Promise<void> {
   console.log('=== MCP設定 ===\n');
-  console.log('Claude Code / Claude Desktop に freee-mcp を設定できます。\n');
+  console.log(`Claude Code / Claude Desktop に ${profile.name} を設定できます。\n`);
 
-  const claudeCodeConfigured = await configureMcpTarget('claude-code');
+  const claudeCodeConfigured = await configureMcpTarget('claude-code', profile);
   console.log('');
 
-  const claudeDesktopConfigured = await configureMcpTarget('claude-desktop');
+  const claudeDesktopConfigured = await configureMcpTarget('claude-desktop', profile);
   console.log('');
 
-  showSkillInstallGuide(claudeCodeConfigured, claudeDesktopConfigured);
+  showSkillInstallGuide(claudeCodeConfigured, claudeDesktopConfigured, profile);
 
   console.log('セットアップ完了!');
   console.log('変更を反映するには、Claude Code / Claude Desktop を再起動してください。\n');

@@ -4,8 +4,15 @@ import { stopCallbackServer } from '../auth/server.js';
 import { clearTokens } from '../auth/tokens.js';
 import { getConfigDir, PACKAGE_VERSION } from '../constants.js';
 import { saveConfig } from './configuration.js';
+import { detectHostPackage, type HostPackage } from './host-package.js';
 import { performOAuth } from './oauth-flow.js';
-import { collectCredentials, configureMcpIntegration, selectCompany } from './prompts.js';
+import {
+  collectCredentials,
+  configureMcpIntegration,
+  FREEE_MCP_PROFILE,
+  type McpServerProfile,
+  selectCompany,
+} from './prompts.js';
 
 export interface ConfigureOptions {
   force?: boolean;
@@ -22,6 +29,13 @@ async function clearConfig(): Promise<void> {
   }
 }
 
+function profileFromHost(host: HostPackage): McpServerProfile {
+  return {
+    name: host.name,
+    entry: { command: 'npx', args: [host.binName] },
+  };
+}
+
 export async function configure(options: ConfigureOptions = {}): Promise<void> {
   console.log(`\n=== freee-mcp v${PACKAGE_VERSION} Configuration Setup ===\n`);
 
@@ -30,6 +44,14 @@ export async function configure(options: ConfigureOptions = {}): Promise<void> {
     await clearTokens();
     await clearConfig();
     console.log('リセットが完了しました。\n');
+  }
+
+  const host = detectHostPackage();
+  const mcpProfile = host ? profileFromHost(host) : FREEE_MCP_PROFILE;
+
+  if (host) {
+    console.log(`freee-mcp-core は ${host.name} のライブラリ依存として実行されています。`);
+    console.log(`MCP 登録は freee-mcp ではなく ${host.name} を対象に行います。\n`);
   }
 
   console.log('このウィザードでは、freee-mcpの設定と認証を対話式で行います。');
@@ -42,7 +64,7 @@ export async function configure(options: ConfigureOptions = {}): Promise<void> {
       oauthResult.accessToken,
     );
     await saveConfig(credentials, selectedCompany, allCompanies);
-    await configureMcpIntegration();
+    await configureMcpIntegration(mcpProfile);
   } catch (error) {
     if (error instanceof Error) {
       console.error(`\nError: ${error.message}`);

@@ -18,7 +18,8 @@ import { extractTokenContext, resolveCompanyId } from '../storage/context.js';
 import { createTextResponse, formatErrorMessage } from '../utils/error.js';
 
 export function addAuthenticationTools(server: McpServer, options?: { remote?: boolean }): void {
-  registerTracedTool(server,
+  registerTracedTool(
+    server,
     'freee_current_user',
     {
       title: '現在のユーザー情報',
@@ -72,7 +73,8 @@ export function addAuthenticationTools(server: McpServer, options?: { remote?: b
   );
 
   if (!options?.remote) {
-    registerTracedTool(server,
+    registerTracedTool(
+      server,
       'freee_authenticate',
       {
         title: 'OAuth認証',
@@ -140,7 +142,8 @@ export function addAuthenticationTools(server: McpServer, options?: { remote?: b
     );
   }
 
-  registerTracedTool(server,
+  registerTracedTool(
+    server,
     'freee_auth_status',
     {
       title: '認証状態確認',
@@ -186,7 +189,8 @@ export function addAuthenticationTools(server: McpServer, options?: { remote?: b
     },
   );
 
-  registerTracedTool(server,
+  registerTracedTool(
+    server,
     'freee_clear_auth',
     {
       title: '認証情報クリア',
@@ -220,7 +224,8 @@ export function addAuthenticationTools(server: McpServer, options?: { remote?: b
   );
 
   // Company management tools
-  registerTracedTool(server,
+  registerTracedTool(
+    server,
     'freee_set_current_company',
     {
       title: '事業所設定',
@@ -242,9 +247,17 @@ export function addAuthenticationTools(server: McpServer, options?: { remote?: b
         const { company_id, name, description } = args;
         const tokenContext = extractTokenContext(extra);
 
-        await tokenContext.tokenStore.setCurrentCompany(tokenContext.userId, company_id, name, description);
+        await tokenContext.tokenStore.setCurrentCompany(
+          tokenContext.userId,
+          company_id,
+          name,
+          description,
+        );
 
-        const companyInfo = await tokenContext.tokenStore.getCompanyInfo(tokenContext.userId, company_id);
+        const companyInfo = await tokenContext.tokenStore.getCompanyInfo(
+          tokenContext.userId,
+          company_id,
+        );
 
         recorder?.recordToolCall({
           tool: 'freee_set_current_company',
@@ -264,7 +277,8 @@ export function addAuthenticationTools(server: McpServer, options?: { remote?: b
     },
   );
 
-  registerTracedTool(server,
+  registerTracedTool(
+    server,
     'freee_get_current_company',
     {
       title: '現在の事業所情報',
@@ -277,7 +291,10 @@ export function addAuthenticationTools(server: McpServer, options?: { remote?: b
       try {
         const tokenContext = extractTokenContext(extra);
         const companyId = await resolveCompanyId(tokenContext);
-        const companyInfo = await tokenContext.tokenStore.getCompanyInfo(tokenContext.userId, companyId);
+        const companyInfo = await tokenContext.tokenStore.getCompanyInfo(
+          tokenContext.userId,
+          companyId,
+        );
 
         recorder?.recordToolCall({
           tool: 'freee_get_current_company',
@@ -301,7 +318,8 @@ export function addAuthenticationTools(server: McpServer, options?: { remote?: b
     },
   );
 
-  registerTracedTool(server,
+  registerTracedTool(
+    server,
     'freee_list_companies',
     {
       title: '事業所一覧',
@@ -389,7 +407,8 @@ export function addAuthenticationTools(server: McpServer, options?: { remote?: b
     },
   );
 
-  registerTracedTool(server,
+  registerTracedTool(
+    server,
     'freee_server_info',
     {
       title: 'サーバー情報',
