@@ -1,5 +1,16 @@
 # freee-mcp
 
+## 0.1.0-rc.2
+
+### Patch Changes
+
+- [`2f92c6e`](https://github.com/freee/freee-mcp/commit/2f92c6ed17393577c8180c22a2ea59451bd1a543): chore: smoke-test the auto-publish workflow ([#2](https://github.com/freee/freee-mcp/pull/2))
+
+  End-to-end exercise of the new release pipeline (push-to-main trigger +
+  Trusted Publishing). Bumps to 0.1.0-rc.2 to verify the Release PR is
+  auto-created and that the subsequent publish step authenticates via
+  GitHub OIDC without needing NPM_TOKEN.
+
 ## 0.25.4
 
 ### Patch Changes
