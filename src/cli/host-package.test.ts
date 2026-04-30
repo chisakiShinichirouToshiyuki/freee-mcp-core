@@ -68,6 +68,7 @@ describe('detectHostPackageFrom', () => {
     expect(result).toEqual({
       name: 'logic-solver-mcp',
       binName: 'logic-solver-mcp',
+      binPath: path.resolve(hostRoot, './bin/logic-solver-mcp.js'),
       root: hostRoot,
     });
   });
@@ -92,7 +93,7 @@ describe('detectHostPackageFrom', () => {
   });
 
   it('detects host with string-form bin field', () => {
-    const { selfRoot } = setupHost({
+    const { selfRoot, hostRoot } = setupHost({
       hostName: 'string-bin-pkg',
       hostBin: './bin.js',
       hostDeps: { 'freee-mcp-core': '^0.1.0' },
@@ -101,6 +102,7 @@ describe('detectHostPackageFrom', () => {
     const result = detectHostPackageFrom(selfRoot);
     expect(result?.name).toBe('string-bin-pkg');
     expect(result?.binName).toBe('string-bin-pkg');
+    expect(result?.binPath).toBe(path.resolve(hostRoot, './bin.js'));
   });
 
   it('prefers a bin entry matching the package name', () => {

@@ -18,6 +18,7 @@ const SELF_PACKAGE_NAME = 'freee-mcp-core';
 export type HostPackage = {
   name: string;
   binName: string;
+  binPath: string;
   root: string;
 };
 
@@ -48,22 +49,23 @@ function dependsOnSelf(pkg: PackageJson): boolean {
   );
 }
 
-function pickBinName(pkg: PackageJson): string | null {
+function pickBinEntry(pkg: PackageJson): { name: string; relativePath: string } | null {
   if (!pkg.bin) {
     return null;
   }
   if (typeof pkg.bin === 'string') {
-    return pkg.name ?? null;
+    if (!pkg.name) {
+      return null;
+    }
+    return { name: pkg.name, relativePath: pkg.bin };
   }
   const binNames = Object.keys(pkg.bin);
   if (binNames.length === 0) {
     return null;
   }
   // Prefer a bin entry matching the package name, otherwise the first one.
-  if (pkg.name && binNames.includes(pkg.name)) {
-    return pkg.name;
-  }
-  return binNames[0];
+  const chosen = pkg.name && binNames.includes(pkg.name) ? pkg.name : binNames[0];
+  return { name: chosen, relativePath: pkg.bin[chosen] };
 }
 
 /**
@@ -120,12 +122,13 @@ export function detectHostPackageFrom(startDir: string): HostPackage | null {
   if (!dependsOnSelf(hostPkg)) {
     return null;
   }
-  const binName = pickBinName(hostPkg);
-  if (!binName) {
+  const binEntry = pickBinEntry(hostPkg);
+  if (!binEntry) {
     return null;
   }
 
-  return { name: hostPkg.name, binName, root: hostRoot };
+  const binPath = path.resolve(hostRoot, binEntry.relativePath);
+  return { name: hostPkg.name, binName: binEntry.name, binPath, root: hostRoot };
 }
 
 /**
