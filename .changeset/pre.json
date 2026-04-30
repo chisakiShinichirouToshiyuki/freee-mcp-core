@@ -6,6 +6,8 @@
   },
   "changesets": [
     "configure-detects-host-package",
+    "host-mcp-uses-absolute-path",
+    "release-uses-pat",
     "test-auto-publish"
   ]
 }

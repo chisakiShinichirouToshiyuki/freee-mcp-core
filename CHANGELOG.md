@@ -1,5 +1,12 @@
 # freee-mcp
 
+## 0.1.0-rc.4
+
+### Patch Changes
+
+- [`3194933`](https://github.com/freee/freee-mcp/commit/319493302f72b26e250552aa82a06ac4ffd112f7): `freee-mcp configure` の host 検出時に登録する MCP エントリを `npx <hostBin>` から `node <絶対パス>` に変更。npm 未公開の host (例: 開発中の logic-solver-mcp) でも `npx` がレジストリ解決失敗を起こさず確実に起動できる。bin 名と上流 npm パッケージ名が同名の場合に意図しない別パッケージを引いてしまう事故も防ぐ。 ([#7](https://github.com/freee/freee-mcp/pull/7))
+- [`7e1d7a4`](https://github.com/freee/freee-mcp/commit/7e1d7a49d5a32e4ca9a745f953d4d72e06e5f557): ci: use a Personal Access Token (`RELEASE_PAT`) for `changesets/action` so commits/pushes it makes are attributed to a real user rather than `github-actions[bot]`. Bot-attributed pushes don't trigger downstream workflows, which previously left the `publish` step stranded after every Release PR merge. With the PAT, merging the Release PR re-fires `release.yml` and runs the publish step automatically. ([#9](https://github.com/freee/freee-mcp/pull/9))
+
 ## 0.1.0-rc.3
 
 ### Minor Changes
