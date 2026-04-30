@@ -5,6 +5,7 @@
     "freee-mcp-core": "0.1.0-rc.1"
   },
   "changesets": [
+    "configure-detects-host-package",
     "test-auto-publish"
   ]
 }
