@@ -30,9 +30,13 @@ async function clearConfig(): Promise<void> {
 }
 
 function profileFromHost(host: HostPackage): McpServerProfile {
+  // Register the host's bin script via its absolute path rather than
+  // `npx <binName>`. This works for unpublished / locally-installed host
+  // packages; `npx <name>` would otherwise hit the npm registry and fail
+  // (or worse, resolve to an unrelated package with the same name).
   return {
     name: host.name,
-    entry: { command: 'npx', args: [host.binName] },
+    entry: { command: 'node', args: [host.binPath] },
   };
 }
 
