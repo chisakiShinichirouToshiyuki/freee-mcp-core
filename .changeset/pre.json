@@ -1,0 +1,8 @@
+{
+  "mode": "pre",
+  "tag": "rc",
+  "initialVersions": {
+    "freee-mcp-core": "0.1.0-rc.1"
+  },
+  "changesets": []
+}
