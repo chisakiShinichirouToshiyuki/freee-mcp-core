@@ -18,18 +18,15 @@ function makeRequest(
   headers?: Record<string, string>,
 ): Promise<{ statusCode: number; body: string }> {
   return new Promise((resolve, reject) => {
-    const req = http.request(
-      { hostname: '127.0.0.1', port, path, method, headers },
-      (res) => {
-        let body = '';
-        res.on('data', (chunk) => {
-          body += chunk;
-        });
-        res.on('end', () => {
-          resolve({ statusCode: res.statusCode ?? 0, body });
-        });
-      },
-    );
+    const req = http.request({ hostname: '127.0.0.1', port, path, method, headers }, (res) => {
+      let body = '';
+      res.on('data', (chunk) => {
+        body += chunk;
+      });
+      res.on('end', () => {
+        resolve({ statusCode: res.statusCode ?? 0, body });
+      });
+    });
     req.on('error', reject);
     req.end();
   });
@@ -637,12 +634,9 @@ describe('createTracingMiddleware - canonical log line', () => {
   });
 
   it('skips /health entirely — no canonical log emitted', async () => {
-    const { logInfo, app } = await setupAppWithLoggerSpy(
-      (_req, res) => {
-        res.status(200).json({ status: 'ok' });
-      },
-      '/health',
-    );
+    const { logInfo, app } = await setupAppWithLoggerSpy((_req, res) => {
+      res.status(200).json({ status: 'ok' });
+    }, '/health');
     ({ srv: server, port } = await listen(app));
 
     await makeRequest(port, '/health');

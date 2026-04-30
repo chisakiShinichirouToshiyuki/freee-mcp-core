@@ -18,7 +18,7 @@ export type McpConfigStatus = {
   hasFreeeConfig: boolean;
 };
 
-type McpServerEntry = {
+export type McpServerEntry = {
   command: string;
   args: string[];
   env?: Record<string, string>;
@@ -29,9 +29,9 @@ type McpConfig = {
   [key: string]: unknown;
 };
 
-const FREEE_MCP_SERVER_NAME = 'freee-mcp';
+export const FREEE_MCP_SERVER_NAME = 'freee-mcp';
 
-const FREEE_MCP_SERVER_CONFIG: McpServerEntry = {
+export const FREEE_MCP_SERVER_CONFIG: McpServerEntry = {
   command: 'npx',
   args: ['freee-mcp'],
 };
@@ -102,8 +102,15 @@ async function writeMcpConfig(configPath: string, config: McpConfig): Promise<vo
 
 /**
  * Check the current MCP configuration status for the specified target.
+ *
+ * The `serverName` field defaults to 'freee-mcp' for backwards compatibility,
+ * but accepts any server name so callers can probe for a host-package server
+ * (e.g. 'logic-solver-mcp') instead.
  */
-export async function checkMcpConfigStatus(target: McpTarget): Promise<McpConfigStatus> {
+export async function checkMcpConfigStatus(
+  target: McpTarget,
+  serverName: string = FREEE_MCP_SERVER_NAME,
+): Promise<McpConfigStatus> {
   const configPath = getMcpConfigPath(target);
 
   try {
@@ -113,7 +120,7 @@ export async function checkMcpConfigStatus(target: McpTarget): Promise<McpConfig
     return {
       path: configPath,
       exists: true,
-      hasFreeeConfig: config?.mcpServers?.[FREEE_MCP_SERVER_NAME] !== undefined,
+      hasFreeeConfig: config?.mcpServers?.[serverName] !== undefined,
     };
   } catch {
     return {
@@ -157,25 +164,30 @@ export async function addMcpServerConfig(
 }
 
 /**
- * Remove freee-mcp configuration from the specified target.
+ * Remove a named MCP server configuration from the specified target.
  * Preserves other MCP server configurations.
  */
-export async function removeFreeeMcpConfig(target: McpTarget): Promise<void> {
+export async function removeMcpServerConfig(target: McpTarget, serverName: string): Promise<void> {
   const configPath = getMcpConfigPath(target);
 
   const config = await readMcpConfig(configPath);
-  if (!config?.mcpServers?.[FREEE_MCP_SERVER_NAME]) {
-    // Nothing to remove
+  if (!config?.mcpServers?.[serverName]) {
     return;
   }
 
-  // Remove freee-mcp entry
-  delete config.mcpServers[FREEE_MCP_SERVER_NAME];
+  delete config.mcpServers[serverName];
 
-  // Clean up empty mcpServers object
   if (Object.keys(config.mcpServers).length === 0) {
     delete config.mcpServers;
   }
 
   await writeMcpConfig(configPath, config);
+}
+
+/**
+ * Remove freee-mcp configuration from the specified target.
+ * Preserves other MCP server configurations.
+ */
+export async function removeFreeeMcpConfig(target: McpTarget): Promise<void> {
+  await removeMcpServerConfig(target, FREEE_MCP_SERVER_NAME);
 }

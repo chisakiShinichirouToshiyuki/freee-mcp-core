@@ -18,10 +18,12 @@ let _toolErrorCount: Counter | null = null;
  */
 export function getHttpRequestDuration(): Histogram {
   if (!_httpRequestDuration) {
-    _httpRequestDuration = metrics.getMeter(METER_NAME).createHistogram('http.server.request.duration', {
-      description: 'HTTP server request duration',
-      unit: 's',
-    });
+    _httpRequestDuration = metrics
+      .getMeter(METER_NAME)
+      .createHistogram('http.server.request.duration', {
+        description: 'HTTP server request duration',
+        unit: 's',
+      });
   }
   return _httpRequestDuration;
 }
@@ -40,10 +42,12 @@ export function getHttpRequestDuration(): Histogram {
  */
 export function getMcpSseConnectionDuration(): Histogram {
   if (!_mcpSseConnectionDuration) {
-    _mcpSseConnectionDuration = metrics.getMeter(METER_NAME).createHistogram('mcp.sse.connection.duration', {
-      description: 'SSE (Streamable-HTTP) connection lifetime',
-      unit: 's',
-    });
+    _mcpSseConnectionDuration = metrics
+      .getMeter(METER_NAME)
+      .createHistogram('mcp.sse.connection.duration', {
+        description: 'SSE (Streamable-HTTP) connection lifetime',
+        unit: 's',
+      });
   }
   return _mcpSseConnectionDuration;
 }
@@ -67,10 +71,12 @@ export function getHttpRequestErrorCount(): Counter {
  */
 export function getToolInvocationDuration(): Histogram {
   if (!_toolInvocationDuration) {
-    _toolInvocationDuration = metrics.getMeter(METER_NAME).createHistogram('mcp.tool.invocation.duration', {
-      description: 'MCP tool invocation duration',
-      unit: 's',
-    });
+    _toolInvocationDuration = metrics
+      .getMeter(METER_NAME)
+      .createHistogram('mcp.tool.invocation.duration', {
+        description: 'MCP tool invocation duration',
+        unit: 's',
+      });
   }
   return _toolInvocationDuration;
 }

@@ -3,9 +3,7 @@ import { makeErrorChain, scrubErrorMessage, serializeErrorChain } from './error-
 
 describe('scrubErrorMessage', () => {
   it('masks 6+ digit numeric IDs', () => {
-    expect(scrubErrorMessage('company_id=12345678 failed')).toBe(
-      'company_id=[REDACTED_ID] failed',
-    );
+    expect(scrubErrorMessage('company_id=12345678 failed')).toBe('company_id=[REDACTED_ID] failed');
   });
 
   it('leaves short integers (status codes, line numbers) alone', () => {
@@ -15,15 +13,11 @@ describe('scrubErrorMessage', () => {
   });
 
   it('masks email addresses', () => {
-    expect(scrubErrorMessage('User user@example.com failed')).toBe(
-      'User [REDACTED_EMAIL] failed',
-    );
+    expect(scrubErrorMessage('User user@example.com failed')).toBe('User [REDACTED_EMAIL] failed');
   });
 
   it('masks both emails and numeric IDs in one pass', () => {
-    expect(scrubErrorMessage('user@x.io id=99999999')).toBe(
-      '[REDACTED_EMAIL] id=[REDACTED_ID]',
-    );
+    expect(scrubErrorMessage('user@x.io id=99999999')).toBe('[REDACTED_EMAIL] id=[REDACTED_ID]');
   });
 
   it('returns empty string unchanged', () => {
@@ -31,9 +25,7 @@ describe('scrubErrorMessage', () => {
   });
 
   it('returns plain messages unchanged', () => {
-    expect(scrubErrorMessage('timeout waiting for upstream')).toBe(
-      'timeout waiting for upstream',
-    );
+    expect(scrubErrorMessage('timeout waiting for upstream')).toBe('timeout waiting for upstream');
   });
 });
 

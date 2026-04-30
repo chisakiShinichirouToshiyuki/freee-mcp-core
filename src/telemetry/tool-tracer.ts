@@ -11,7 +11,12 @@ import { getToolErrorCount, getToolInvocationDuration } from './metrics.js';
  * (same pattern as withRedis in server/errors.ts).
  */
 // biome-ignore lint/suspicious/noExplicitAny: registerTool has complex generic overloads that cannot be cleanly wrapped
-export function registerTracedTool(server: McpServer, name: string, config: any, handler: (...args: any[]) => any): void {
+export function registerTracedTool(
+  server: McpServer,
+  name: string,
+  config: any,
+  handler: (...args: any[]) => any,
+): void {
   // biome-ignore lint/suspicious/noExplicitAny: wrapping preserves original handler's arg types
   const tracedHandler = async (...handlerArgs: any[]) => {
     const tracer = trace.getTracer('freee-mcp');

@@ -112,7 +112,9 @@ export async function makeApiRequest(
   } catch (fetchError) {
     const durationMs = Date.now() - startTime;
     const errorType: 'timeout' | 'network_error' =
-      fetchError instanceof Error && fetchError.name === 'TimeoutError' ? 'timeout' : 'network_error';
+      fetchError instanceof Error && fetchError.name === 'TimeoutError'
+        ? 'timeout'
+        : 'network_error';
     recorder?.recordApiCall({
       method,
       path_pattern: safePath,
