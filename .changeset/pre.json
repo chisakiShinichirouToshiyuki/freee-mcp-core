@@ -4,5 +4,7 @@
   "initialVersions": {
     "freee-mcp-core": "0.1.0-rc.1"
   },
-  "changesets": []
+  "changesets": [
+    "test-auto-publish"
+  ]
 }
