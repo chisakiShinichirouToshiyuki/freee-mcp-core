@@ -6,6 +6,9 @@
   },
   "changesets": [
     "configure-detects-host-package",
+    "host-mcp-uses-absolute-path",
+    "release-uses-pat",
+    "restrict-claude-workflows",
     "test-auto-publish"
   ]
 }
