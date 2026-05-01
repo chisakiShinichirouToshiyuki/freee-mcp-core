@@ -1,5 +1,11 @@
 # freee-mcp
 
+## 0.1.0-rc.6
+
+### Minor Changes
+
+- [`17f2268`](https://github.com/freee/freee-mcp/commit/17f2268954050895b94c9c70adedc4119dbb0f19): chore: rename package and repository from `freee-mcp-core` to `free-mcp-core` to avoid using the freee K.K. product name in distribution metadata. Functionality is unchanged. Old `freee-mcp-core` versions remain on npm but are no longer maintained. ([#12](https://github.com/freee/freee-mcp/pull/12))
+
 ## 0.1.0-rc.4
 
 ### Patch Changes
