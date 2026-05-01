@@ -1,5 +1,5 @@
 ---
-"freee-mcp-core": patch
+"free-mcp-core": patch
 ---
 
 chore: smoke-test the auto-publish workflow
