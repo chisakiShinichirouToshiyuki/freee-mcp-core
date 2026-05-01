@@ -8,6 +8,7 @@
     "configure-detects-host-package",
     "host-mcp-uses-absolute-path",
     "release-uses-pat",
+    "rename-to-free-mcp-core",
     "restrict-claude-workflows",
     "test-auto-publish"
   ]
