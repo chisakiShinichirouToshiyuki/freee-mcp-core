@@ -1,5 +1,5 @@
 ---
-"freee-mcp-core": minor
+"free-mcp-core": minor
 ---
 
 `freee-mcp configure` が freee-mcp-core を npm 依存としてラップしている親パッケージを自動検出し、Claude Code / Claude Desktop の MCP 登録を `freee-mcp` ではなく親パッケージ (例: `logic-solver-mcp`) として書き込むようにした。トップレベルで `npx freee-mcp configure` を実行する従来の挙動は変更なし。

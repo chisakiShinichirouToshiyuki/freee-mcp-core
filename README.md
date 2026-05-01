@@ -1,20 +1,20 @@
-# freee-mcp-core
+# free-mcp-core
 
 Library-form fork of [freee/freee-mcp](https://github.com/freee/freee-mcp). Exposes the MCP server framework, freee API client, OpenAPI schema loader, and skill resources as npm library exports for use as a dependency, while preserving upstream CLI binary compatibility.
 
-This package is a community fork. It is not maintained by freee K.K. The upstream `freee-mcp` package ships only CLI binaries with no `main`/`module`/`exports` field, so its internals cannot be imported. `freee-mcp-core` adds an `exports` map so downstream projects can wrap, extend, or compose freee-mcp's MCP tools without forking the entire repository.
+This package is a community fork. It is not maintained by freee K.K. The upstream `freee-mcp` package ships only CLI binaries with no `main`/`module`/`exports` field, so its internals cannot be imported. `free-mcp-core` adds an `exports` map so downstream projects can wrap, extend, or compose freee-mcp's MCP tools without forking the entire repository.
 
 ## Installation
 
 ```bash
-npm install freee-mcp-core
+npm install free-mcp-core
 ```
 
 Requires Node.js 22+.
 
 ## When to use
 
-Use `freee-mcp-core` if you want to:
+Use `free-mcp-core` if you want to:
 
 - Build a domain-specific MCP server on top of freee API plumbing (e.g., accounting auditing, custom workflow tools, logic solvers)
 - Add your own MCP tools alongside the standard freee tools without maintaining a fork
@@ -33,7 +33,7 @@ import {
   loadConfig,
   initLogger,
   initUserAgentTransportMode,
-} from 'freee-mcp-core';
+} from 'free-mcp-core';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 
 initUserAgentTransportMode('stdio');
@@ -51,7 +51,7 @@ This produces a server identical to the upstream `freee-mcp` CLI: standard freee
 ### Adding your own tools
 
 ```ts
-import { createMcpServer, loadConfig } from 'freee-mcp-core';
+import { createMcpServer, loadConfig } from 'free-mcp-core';
 
 const server = createMcpServer(await loadConfig());
 
@@ -69,7 +69,7 @@ import {
   createMcpServer,
   registerSkillResources,
   loadConfig,
-} from 'freee-mcp-core';
+} from 'free-mcp-core';
 
 const server = createMcpServer(await loadConfig());
 // Core's bundled freee-api-skill is auto-registered.
@@ -86,7 +86,7 @@ const server = createMcpServer(config, { skipBundledSkills: true });
 ### Direct API client access
 
 ```ts
-import { makeApiRequest, loadConfig, initLogger } from 'freee-mcp-core';
+import { makeApiRequest, loadConfig, initLogger } from 'free-mcp-core';
 
 await loadConfig();
 initLogger();
@@ -103,7 +103,7 @@ import {
   uninstallSkillsFrom,
   parseSkillCommandArgs,
   getBundledSkillsDir,
-} from 'freee-mcp-core';
+} from 'free-mcp-core';
 
 // Install both core's bundled skills and your own
 const opts = parseSkillCommandArgs(process.argv.slice(2));
